@@ -1,0 +1,3 @@
+# heatrect
+
+Experimental rectangular heatmaps.

@@ -1,0 +1,16 @@
+{
+  "name": "@au-phiware/heatmap",
+  "version": "0.0.1",
+  "description": "General purpose heatmap library.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Corin Lawson",
+  "license": "MIT",
+  "dependencies": {
+    "lodash.bind": "^4.2.1",
+    "lodash.flow": "^3.5.0",
+    "lodash.partial": "^4.2.1"
+  }
+}

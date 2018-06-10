@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Heatmap</title>
+    <link rel="stylesheet" href="index.css">
+    <script type="text/javascript">let module = {exports:{}};</script>
+    <script type="text/javascript" src="node_modules/lodash.bind/index.js"></script>
+    <script type="text/javascript" src="node_modules/lodash.partial/index.js"></script>
+    <script type="text/javascript" src="node_modules/lodash.flow/index.js"></script>
+    <script type="text/javascript">let _ = {bind:bind,flow:flow,partial:partial};</script>
+    <script type="text/javascript" src="http://kaizouman.github.io/fpsmeter/fpsmeter.js"></script>
+</head>
+<body>
+    <aside id="toolbar">
+        <div class="btn-group-toggle">
+            <label>
+                <input id="enable-rectangular-canvas" type="checkbox" checked>
+                Canvas
+            </label>
+            <label>
+                <input id="enable-rectangular-grid" type="checkbox">
+                Grid
+            </label>
+            <label>
+                <input id="enable-rectangular" type="checkbox">
+                SVG
+            </label>
+        </div>
+    </aside>
+    <article id="rectangular-canvas"></article>
+    <article id="rectangular-grid"></article>
+    <article id="rectangular"></article>
+    <script src="fps.js"></script>
+    <script src="common.js"></script>
+    <script src="rect.js"></script>
+    <script src="svg.js"></script>
+    <script src="grid.js"></script>
+    <script src="canvas.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
