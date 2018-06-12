@@ -9,19 +9,30 @@
 </head>
 <body>
     <aside id="toolbar">
-        <div class="btn-group-toggle">
-            <label>
-                <input id="enable-rectangular-canvas" type="checkbox" checked>
-                Canvas
-            </label>
-            <label>
-                <input id="enable-rectangular-grid" type="checkbox">
-                Grid
-            </label>
-            <label>
-                <input id="enable-rectangular" type="checkbox">
-                SVG
-            </label>
+        <div id="layouts">
+            <span class="btn-group-toggle">
+                <label>
+                    <input id="enable-rectangular-canvas" type="checkbox" checked>
+                    Canvas
+                </label>
+                <label>
+                    <input id="enable-rectangular-grid" type="checkbox">
+                    Grid
+                </label>
+                <label>
+                    <input id="enable-rectangular" type="checkbox">
+                    SVG
+                </label>
+            </span>
+        </div>
+        <div id="title">
+            <span>
+                Rectangular Heatmaps
+            </span>
+        </div>
+        <div id="status">
+            <span id="fps">
+            </span>
         </div>
     </aside>
     <article id="rectangular-canvas"></article>

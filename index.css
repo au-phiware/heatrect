@@ -9,23 +9,34 @@ article {
     position: fixed;
     left: 0;
     top: 0;
-    background-color: black;
     color: white;
-    padding: 4px 8px;
-    border-bottom-right-radius: 8px;
     font-weight: bold;
     font-family: sans-serif;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 100vw;
 }
-#fps {
-    position: fixed;
-    right: 0;
-    top: 0;
+#toolbar > div > * {
+    display: inline-block;
     background-color: black;
-    color: white;
     padding: 4px 8px;
+    line-height: 1.2em;
+}
+#layouts > * {
+    border-bottom-right-radius: 8px;
+}
+#status {
+    justify-self: flex-end;
+}
+#status > * {
     border-bottom-left-radius: 8px;
-    font-weight: bold;
-    font-family: sans-serif;
+}
+#title {
+    justify-self: center;
+}
+#title > * {
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
 }
 #rectangular-canvas canvas,
 #rectangular svg {

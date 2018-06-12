@@ -1,9 +1,7 @@
 ;(function(d) {
   let samples = [];
   let sum = 0, max = 0, mean = 0;
-  let fps = d.createElement('div');
-  fps.id = "fps";
-  d.body.appendChild(fps);
+  let fps = d.getElementById('fps') || createElement();
   d.addEventListener('fps', e => {
     if (e.fps > 120) return;
     if (samples.length >= 60) {
@@ -18,4 +16,11 @@
     fps.innerText = `${samples[0]}; ${s}; ${max} fps`;
   }, false);
   FPSMeter.run();
+
+  function createElement() {
+    let fps = d.createElement('div');
+    fps.id = 'fps';
+    d.body.appendChild(fps);
+    return fps;
+  }
 })(document);
