@@ -1,6 +1,6 @@
-let w = 160, h = 50;
-
-let compute = _.flow(_.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 2/w)), color);
+let w = 80, h = 25;
+let t = 0;
+let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
 
 let layouts =
 { "rectangular-canvas": newRectangularCanvas
@@ -9,31 +9,29 @@ let layouts =
 }
 
 let toolbar = {};
-let updaters =
+let renderers =
 Object.entries(layouts).map(([id, layout]) => {
-  let [el, update] = layout(compute, h, w);
+  let [el, render] = layout(h, w);
   document.getElementById(id).appendChild(el);
   toolbar[id] = document.getElementById(`enable-${id}`);
-  return [id, update];
+  return [id, _.partial(render, color)];
 });
 
 let update = function() {
-  updaters.forEach(([id, update]) => toolbar[id].checked && update());
+  renderers.forEach(([id, render]) => toolbar[id].checked && render(_.partial(compute, t)));
   t--;
 }
 
-requestAnimationFrame(update);
 start();
 
-let t = 0;
 function color(v) {
-  return `hsl(${v*360+t}, 80%, 60%)`;
+  return `hsl(${v}, 80%, 60%)`;
 }
 
-function value(f, x, y) {
-  let dx = f(x,y);
+function value(f, t, x, y) {
+  let dx = f(x,y) + t;
   if (x < w/2) {
-    return dx + 0.333;
+    return dx + 120;
   }
   return dx;
 }
@@ -48,8 +46,9 @@ function d(x1, y1, x2, y2) {
 
 var loop;
 function stop() {
-  clearInterval(loop);
+  clearTimeout(loop);
 }
 function start() {
-  loop = setInterval(update, 60)
+  requestAnimationFrame(update);
+  loop = setTimeout(start, 16)
 }

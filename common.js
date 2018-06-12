@@ -17,8 +17,8 @@ function forEachCell(getCell, rows, cols, apply) {
   }
 }
 
-function paint(forEachCell, update, color) {
-  let paintCell = (e, x, y) => update.call(this, e, color.call(this, x, y));
+function paint(forEachCell, update, color, value) {
+  let paintCell = (e, x, y) => update.call(this, e, color.call(this, value.call(this, x, y)));
   return forEachCell.call(this, paintCell);
 }
 

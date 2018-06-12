@@ -4,13 +4,13 @@ function createRectangularCanvasRoot() {
   return document.createElement('canvas');
 }
 
-function newRectangularCanvasLayout(setColor, compute, rows, cols) {
+function newRectangularCanvasLayout(setColor, rows, cols) {
   let root = newLayout(createRectangularCanvasRoot);
   let context = root.getContext('2d');
   let forEach = _.partial(forEachCanvasCell, rows, cols);
   return [
       root
-    , _.bind(paint, context, forEach, setColor, compute)
+    , _.bind(paint, context, forEach, setColor)
   ];
 }
 

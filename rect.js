@@ -1,4 +1,4 @@
-function newRectangularLayout(createRoot, createCell, setColor, compute, rows, cols) {
+function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
   let root = newLayout(
       _.partial(createRoot, rows, cols)
     , _.partial(forEachCell, getRectangularCell, rows, cols)
@@ -11,7 +11,6 @@ function newRectangularLayout(createRoot, createCell, setColor, compute, rows, c
         , root
         , _.partial(forEachCell, getRectangularCell, rows, cols)
         , setColor
-        , compute
       )
   ];
 }
