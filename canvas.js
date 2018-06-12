@@ -8,9 +8,11 @@ function newRectangularCanvasLayout(setColor, rows, cols) {
   let root = newLayout(createRectangularCanvasRoot);
   let context = root.getContext('2d');
   let forEach = _.partial(forEachCanvasCell, rows, cols);
+  let renderer = _.bind(paint, context, forEach, setColor)
+  renderer.memoize = _.partial(rectangularMemoize, cols);
   return [
       root
-    , _.bind(paint, context, forEach, setColor)
+    , renderer
   ];
 }
 

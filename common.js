@@ -21,4 +21,3 @@ function paint(forEachCell, update, color, value) {
   let paintCell = (e, x, y) => update.call(this, e, color.call(this, value.call(this, x, y)));
   return forEachCell.call(this, paintCell);
 }
-

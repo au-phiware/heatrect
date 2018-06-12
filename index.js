@@ -1,5 +1,6 @@
-let w = 80, h = 25;
+let w = 100, h = 30;
 let t = 0;
+let duration = 4000;
 let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
 
 let layouts =
@@ -9,17 +10,38 @@ let layouts =
 }
 
 let toolbar = {};
+let transitions = {};
 let renderers =
 Object.entries(layouts).map(([id, layout]) => {
   let [el, render] = layout(h, w);
+  render = _.partial(render, color);
   document.getElementById(id).appendChild(el);
   toolbar[id] = document.getElementById(`enable-${id}`);
-  return [id, _.partial(render, color)];
+  toolbar[id].addEventListener('change', function() {
+    if (this.checked) {
+      let from = transitions[id]
+        ? transitions[id]()
+        : _.partial(compute, t + 360);
+      transitions[id] = transition(render, EasingFunctions.linear, duration, from, _.partial(compute, t));
+    } else if (transitions[id]) {
+      transitions[id]();
+    }
+  });
+  return [id, render];
 });
-
 let update = function() {
-  renderers.forEach(([id, render]) => toolbar[id].checked && render(_.partial(compute, t)));
-  t--;
+  let next = t - 360;
+  let running = false;
+  renderers.map(([id, render]) => {
+    if (toolbar[id].checked) {
+      running = true;
+      let from = transitions[id]
+        ? transitions[id]()
+        : _.partial(compute, t);
+      transitions[id] = transition(render, EasingFunctions.linear, duration, from, _.partial(compute, next));
+    }
+  });
+  if (running) t = next;
 }
 
 start();
@@ -50,5 +72,5 @@ function stop() {
 }
 function start() {
   requestAnimationFrame(update);
-  loop = setTimeout(start, 16)
+  loop = setTimeout(start, duration)
 }
