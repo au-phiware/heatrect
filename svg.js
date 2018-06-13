@@ -3,6 +3,7 @@ let createRectangularSvgRoot, createRectangularSvgCell, setSvgCellColor;
   createRectangularSvgRoot = function(rows, cols) {
     let root = document.createElementNS(ns, 'svg');
     root.setAttribute('viewBox', `0 0 ${cols} ${rows}`);
+    root.setAttribute('preserveAspectRatio', 'none');
     return root;
   }
 

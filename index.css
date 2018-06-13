@@ -46,7 +46,32 @@ article {
 rect {
     fill: none;
 }
-#rectangular-grid > div > div {
-    height: 0.38em;
+#rectangular-grid .heatmap > div {
+    height: 6px;
     /*transition: background-color 0.25s linear;*/
+}
+
+.x-axis {
+    border-top: 1px solid black;
+}
+.x-axis:nth-of-type(odd) {
+    border-left: 1px solid black;
+    margin-left: -1px;
+}
+.x-axis.first {
+    border-left: none;
+}
+.y-axis {
+    border-right: 1px solid black;
+}
+.y-axis:nth-of-type(odd) {
+    border-top: 1px solid black;
+}
+.heatmap {
+    border-top: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid black;
+    margin-bottom: -1px;
+    background-color: rgba(0,0,0,0.8);
+    grid-gap: 1px;
 }

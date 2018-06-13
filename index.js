@@ -1,4 +1,4 @@
-let w = 100, h = 30;
+let w = 96, h = 50;
 let t = 0;
 let duration = 4000;
 let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
@@ -15,7 +15,8 @@ let renderers =
 Object.entries(layouts).map(([id, layout]) => {
   let [el, render] = layout(h, w);
   render = _.partial(render, color);
-  document.getElementById(id).appendChild(el);
+  document.getElementById(id).appendChild(rectangularLayoutWithTicks(el, h, w));
+  el.className = 'heatmap';
   toolbar[id] = document.getElementById(`enable-${id}`);
   toolbar[id].addEventListener('change', function() {
     if (this.checked) {
