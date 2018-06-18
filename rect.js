@@ -21,13 +21,19 @@ var columnLabels = ["January", "February", "March", "April", "June", "July", "Au
 var rowLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 function rectangularLayoutWithTicks(root, rows, cols) {
-  let tickLength = '1px';
+  let el;
+  let tickLength = '7px';
   let gutterLength = '1px';
+
   let container = document.createElement('div');
   container.style.display = 'grid';
   container.style.gridTemplateColumns = `[origin-start y-label-start] 100px [y-label-end y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] repeat(${2*cols}, 1fr) [gutter-start] ${gutterLength} [gutter-end main-end]`;
   container.style.gridTemplateRows = `[main-start gutter-start] ${gutterLength} [gutter-end] repeat(${2*rows}, 1fr) [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end x-label-start] 1.2em [x-label-end origin-end]`;
-  var el = document.createElement('div');
+
+  root.style.gridArea = 'main';
+  container.appendChild(root);
+
+  el = document.createElement('div');
   el.className = 'origin';
   el.style.gridArea = 'origin';
   container.appendChild(el);
@@ -42,7 +48,7 @@ function rectangularLayoutWithTicks(root, rows, cols) {
   for (var i = 0; i < rows; i++) {
     label = document.createElement('span');
     label.className = 'y-label';
-    el = document.createElement('div');
+    el = document.createElement('i');
     el.className = 'y-axis';
     if (i == 0) {
       label.classList.add('first');
@@ -53,7 +59,7 @@ function rectangularLayoutWithTicks(root, rows, cols) {
     el.style.gridColumn = 'y-axis';
     container.appendChild(label);
     container.appendChild(el);
-    el = document.createElement('div');
+    el = document.createElement('i');
     el.className = 'y-axis';
     el.style.gridColumn = 'y-axis';
     container.appendChild(el);
@@ -62,7 +68,7 @@ function rectangularLayoutWithTicks(root, rows, cols) {
   el.classList.add('last');
 
   for (var i = 0; i < 2*cols + 1; i++) {
-    el = document.createElement('div');
+    el = document.createElement('i');
     el.className = 'x-axis';
     if (i == 0) {
       el.classList.add('first');
@@ -85,8 +91,6 @@ function rectangularLayoutWithTicks(root, rows, cols) {
   }
   el.classList.add('last');
 
-  root.style.gridArea = 'main';
-  container.appendChild(root);
   return container;
 }
 

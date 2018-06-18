@@ -92,10 +92,10 @@ rect {
     grid-column-end: span 1;
 }
 .x-axis:nth-of-type(even) {
-    height: 7px;
+    height: 4px;
 }
-.x-axis:nth-of-type(4n) {
-    height: 13px;
+.x-axis:nth-of-type(4n+2) {
+    height: 7px;
 }
 
 .y-label {
