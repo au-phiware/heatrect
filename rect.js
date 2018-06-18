@@ -17,43 +17,74 @@ function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
   ];
 }
 
+var columnLabels = ["January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December"];
+var rowLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
 function rectangularLayoutWithTicks(root, rows, cols) {
   let tickLength = '1px';
   let gutterLength = '1px';
   let container = document.createElement('div');
   container.style.display = 'grid';
-  container.style.gridTemplateColumns = `[origin-start y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] repeat(${2*cols}, 1fr) [gutter-start] ${gutterLength} [gutter-end main-end]`;
-  container.style.gridTemplateRows = `[main-start gutter-start] ${gutterLength} [gutter-end] repeat(${2*rows}, 1fr) [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end origin-end]`;
+  container.style.gridTemplateColumns = `[origin-start y-label-start] 100px [y-label-end y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] repeat(${2*cols}, 1fr) [gutter-start] ${gutterLength} [gutter-end main-end]`;
+  container.style.gridTemplateRows = `[main-start gutter-start] ${gutterLength} [gutter-end] repeat(${2*rows}, 1fr) [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end x-label-start] 1.2em [x-label-end origin-end]`;
   var el = document.createElement('div');
   el.className = 'origin';
   el.style.gridArea = 'origin';
   container.appendChild(el);
+
   el = document.createElement('div');
   el.className = 'gutter';
   el.style.gridRow = 'gutter';
+  el.style.gridColumn = 'origin-start / y-axis-end';
   container.appendChild(el);
-  for (var i = 0; i < 2*rows + 1; i++) {
+
+  let label;
+  for (var i = 0; i < rows; i++) {
+    label = document.createElement('span');
+    label.className = 'y-label';
     el = document.createElement('div');
     el.className = 'y-axis';
     if (i == 0) {
+      label.classList.add('first');
       el.classList.add('first');
     }
+    label.innerText = rowLabels[i];
+    label.style.gridColumn = 'y-label';
+    el.style.gridColumn = 'y-axis';
+    container.appendChild(label);
+    container.appendChild(el);
+    el = document.createElement('div');
+    el.className = 'y-axis';
     el.style.gridColumn = 'y-axis';
     container.appendChild(el);
   }
+  label.classList.add('last');
   el.classList.add('last');
-  el.style.gridRow = 'x-axis';
+
   for (var i = 0; i < 2*cols + 1; i++) {
     el = document.createElement('div');
     el.className = 'x-axis';
     if (i == 0) {
       el.classList.add('first');
-      el.style.gridColumn = 'y-axis';
     }
     el.style.gridRow = 'x-axis';
     container.appendChild(el);
   }
   el.classList.add('last');
+
+  for (var i = 0; i < cols / 2; i++) {
+    el = document.createElement('span');
+    el.className = 'x-label';
+    if (i == 0) {
+      el.classList.add('first');
+    } else {
+      el.innerText = columnLabels[(i - 1) * 2 + 1]
+    }
+    el.style.gridRow = 'x-label';
+    container.appendChild(el);
+  }
+  el.classList.add('last');
+
   root.style.gridArea = 'main';
   container.appendChild(root);
   return container;

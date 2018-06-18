@@ -71,6 +71,7 @@ rect {
 .x-axis.first {
     border-left: none;
 }
+
 .y-axis {
     border-right: var(--border);
     margin-right: calc(-1 * var(--border-width));
@@ -79,6 +80,39 @@ rect {
     border-top: var(--tick);
     margin-top: calc(-0.5 * var(--tick-width));
 }
+
+.x-label {
+    grid-row: x-label;
+    grid-column-end: span 4;
+    text-align: center;
+    font-family: sans-serif;
+    line-height: 1.2em;
+}
+.x-label.first {
+    grid-column-end: span 1;
+}
+.x-axis:nth-of-type(even) {
+    height: 7px;
+}
+.x-axis:nth-of-type(4n) {
+    height: 13px;
+}
+
+.y-label {
+    grid-column: y-label;
+    grid-row-end: span 2;
+    /* transform: rotate(30deg); */
+    transform-origin: center right;
+    text-align:right;
+    /* text-transform: uppercase; */
+    font-family: sans-serif;
+    line-height: 1.2em;
+    /* display: none; */
+    align-self: center;
+    padding-right: 4px;
+    grid-row-start: initial;
+}
+
 .heatmap {
     border: var(--border);
     background-color: rgba(0,0,0,0.8);

@@ -1,4 +1,4 @@
-let w = 96, h = 50;
+let w = 12, h = 7;
 let t = 0;
 let duration = 4000;
 let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
