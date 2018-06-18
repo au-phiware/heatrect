@@ -18,13 +18,19 @@ function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
 }
 
 function rectangularLayoutWithTicks(root, rows, cols) {
+  let tickLength = '1px';
+  let gutterLength = '1px';
   let container = document.createElement('div');
   container.style.display = 'grid';
-  container.style.gridTemplateColumns = `[origin-start y-axis-start] 3px [y-axis-end origin-end main-start] repeat(${2*cols}, 1fr) [main-end]`;
-  container.style.gridTemplateRows = `[main-start] repeat(${2*rows}, 1fr) [main-end origin-start x-axis-start] 3px [x-axis-end origin-end]`;
+  container.style.gridTemplateColumns = `[origin-start y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] repeat(${2*cols}, 1fr) [gutter-start] ${gutterLength} [gutter-end main-end]`;
+  container.style.gridTemplateRows = `[main-start gutter-start] ${gutterLength} [gutter-end] repeat(${2*rows}, 1fr) [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end origin-end]`;
   var el = document.createElement('div');
   el.className = 'origin';
   el.style.gridArea = 'origin';
+  container.appendChild(el);
+  el = document.createElement('div');
+  el.className = 'gutter';
+  el.style.gridRow = 'gutter';
   container.appendChild(el);
   for (var i = 0; i < 2*rows + 1; i++) {
     el = document.createElement('div');
