@@ -1,4 +1,26 @@
-function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
+import * as _ from './util.js';
+import {newLayout, forEachCell, paint} from './common.js';
+
+export function rectangularMemoize(cols, fn) {
+  if (fn.cache) return fn;
+  let memo = function(x, y) {
+    let i = cols * x + y;
+    if (i in memo.cache) {
+      return memo.cache[i];
+    }
+    let v = fn.call(this, x, y);
+    memo.cache[i] = v;
+    return v;
+  }
+  memo.cache = new Array();
+  return memo;
+}
+
+export function getRectangularCell(x, y, i) {
+  return this.children.item(i);
+}
+
+export function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
   let root = newLayout(
       _.partial(createRoot, rows, cols)
     , _.partial(forEachCell, getRectangularCell, rows, cols)
@@ -20,7 +42,7 @@ function newRectangularLayout(createRoot, createCell, setColor, rows, cols) {
 var columnLabels = ["January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December"];
 var rowLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-function rectangularLayoutWithTicks(root, rows, cols) {
+export function rectangularLayoutWithTicks(root, rows, cols) {
   let el;
   let tickLength = '7px';
   let gutterLength = '1px';
@@ -92,23 +114,4 @@ function rectangularLayoutWithTicks(root, rows, cols) {
   el.classList.add('last');
 
   return container;
-}
-
-function getRectangularCell(x, y, i) {
-  return this.children.item(i);
-}
-
-function rectangularMemoize(cols, fn) {
-  if (fn.cache) return fn;
-  let memo = function(x, y) {
-    let i = cols * x + y;
-    if (i in memo.cache) {
-      return memo.cache[i];
-    }
-    let v = fn.call(this, x, y);
-    memo.cache[i] = v;
-    return v;
-  }
-  memo.cache = new Array();
-  return memo;
 }

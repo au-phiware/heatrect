@@ -1,3 +1,10 @@
+import * as _ from './util.js';
+import {transition, EasingFunctions} from './transition.js';
+import {newRectangularGrid} from './grid.js';
+import {newRectangularSvg} from './svg.js';
+import {newRectangularCanvas} from './canvas.js';
+import {rectangularLayoutWithTicks} from './rect.js';
+
 let w = 12, h = 7;
 let t = 0;
 let duration = 4000;
@@ -16,7 +23,11 @@ Object.entries(layouts).map(([id, layout]) => {
   let [el, render] = layout(h, w);
   render = _.partial(render, color);
   document.getElementById(id).appendChild(rectangularLayoutWithTicks(el, h, w));
-  el.className = 'heatmap';
+  if (el.classList) {
+    el.classList.add('heatmap');
+  } else {
+    el.className = 'heatmap';
+  }
   toolbar[id] = document.getElementById(`enable-${id}`);
   toolbar[id].addEventListener('change', function() {
     if (this.checked) {

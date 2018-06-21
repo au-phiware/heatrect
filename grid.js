@@ -1,4 +1,7 @@
-let newRectangularGrid = _.partial(newRectangularLayout, createRectangularGridRoot, createRectangularGridCell, setGridCellColor);
+import * as _ from './util.js';
+import {newRectangularLayout} from './rect.js';
+
+export let newRectangularGrid = _.partial(newRectangularLayout, createRectangularGridRoot, createRectangularGridCell, setGridCellColor);
 
 function createRectangularGridRoot(rows, cols) {
   let root = document.createElement('div');

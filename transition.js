@@ -1,6 +1,8 @@
+import * as _ from './util.js';
+
 var transitionRate = 16;
 
-function transition(renderer, ease, duration, from, to) {
+export function transition(renderer, ease, duration, from, to) {
   let rate = transitionRate;
   let step = rate / duration;
   let shouldDrop = false
@@ -45,7 +47,7 @@ function interpolate(ease, from, to, t, x, y) {
  * Easing Functions - inspired from http://gizma.com/easing/
  * only considering the t value for the range [0, 1] => [0, 1]
  */
-EasingFunctions = {
+let EasingFunctions = {
   // no easing, no acceleration
   linear: function (t) { return t },
   // accelerating from zero velocity
@@ -72,4 +74,6 @@ EasingFunctions = {
   easeOutQuint: function (t) { return 1+(--t)*t*t*t*t },
   // acceleration until halfway, then deceleration
   easeInOutQuint: function (t) { return t<.5 ? 16*t*t*t*t*t : 1+16*(--t)*t*t*t*t }
-}
+};
+
+export { EasingFunctions };

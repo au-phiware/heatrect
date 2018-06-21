@@ -1,4 +1,8 @@
-let newRectangularCanvas = _.partial(newRectangularCanvasLayout, setCanvasCellColor);
+import * as _ from './util.js';
+import {newLayout, paint} from './common.js';
+import {rectangularMemoize} from './rect.js';
+
+export let newRectangularCanvas = _.partial(newRectangularCanvasLayout, setCanvasCellColor);
 
 function createRectangularCanvasRoot() {
   return document.createElement('canvas');
