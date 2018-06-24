@@ -6,10 +6,10 @@ import {newRectangularCanvas} from './canvas.js';
 import {newRectangularTable} from './table.js';
 import {rectangularLayoutWithTicks} from './rect.js';
 
-let w = 12, h = 7;
+let w = 90, h = 60;
 let t = 0;
 let duration = 4000;
-let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
+let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 3/w));
 
 let layouts =
 { "rectangular-table": newRectangularTable
@@ -30,15 +30,15 @@ Object.entries(layouts).map(([id, layout]) => {
   document.getElementById(id).appendChild(
     rectangularLayoutWithTicks(
       rectangularLayoutWithTicks(el, h, w, {
-        yTickCount: 50,
-        xTickCount: 100,
+        yTickCount: 30,
+        xTickCount: 12,
         tickLength: '4px',
       }), h, w, {
         gutterLength: '5px',
         yTickCount: 15,
         xTickCount: 6,
-        yTickFormat: rowLabels,
-        xTickFormat: columnLabels
+        yTickFormat: t => rowLabels(t % rowLabels.domain()[1] + 1),
+        xTickFormat: t => columnLabels(t % columnLabels.domain()[1] + 1)
       }
     )
   );
