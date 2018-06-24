@@ -12,3 +12,5 @@ export function partial(fn, ...left) {
   return bind(fn, null, ...left);
 }
 
+export function identity(x) { return x; }
+
