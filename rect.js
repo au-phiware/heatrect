@@ -39,7 +39,7 @@ export function newRectangularLayout(createRoot, createCell, setColor, rows, col
   ];
 }
 
-var columnLabels = ["January", "February", "March", "April", "June", "July", "August", "September", "October", "November", "December"];
+var columnLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 var rowLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 export function rectangularLayoutWithTicks(root, rows, cols) {
