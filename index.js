@@ -3,6 +3,7 @@ import {transition, EasingFunctions} from './transition.js';
 import {newRectangularGrid} from './grid.js';
 import {newRectangularSvg} from './svg.js';
 import {newRectangularCanvas} from './canvas.js';
+import {newRectangularTable} from './table.js';
 import {rectangularLayoutWithTicks} from './rect.js';
 
 let w = 12, h = 7;
@@ -11,7 +12,8 @@ let duration = 4000;
 let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 720/w));
 
 let layouts =
-{ "rectangular-canvas": newRectangularCanvas
+{ "rectangular-table": newRectangularTable
+, "rectangular-canvas": newRectangularCanvas
 , "rectangular-grid": newRectangularGrid
 , "rectangular": newRectangularSvg
 }

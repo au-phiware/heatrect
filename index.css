@@ -39,6 +39,7 @@ article {
     border-bottom-right-radius: 8px;
 }
 
+#rectangular-table table,
 #rectangular-canvas canvas,
 #rectangular-grid > div,
 #rectangular svg {
@@ -51,6 +52,12 @@ rect {
 #rectangular-grid .heatmap > div {
     background-color: rgba(0,0,0, 0);
     /*transition: background-color 0.25s linear;*/
+}
+
+#rectangular-table table {
+    border-collapse: separate;
+    border-spacing: 1px;
+    border: 0;
 }
 
 :root {
