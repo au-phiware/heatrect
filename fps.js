@@ -14,7 +14,7 @@ document.addEventListener('fps', e => {
   let s = (sum/samples.length).toFixed(1)
   fps.innerText = `${samples[0]}; ${s}; ${max} fps`;
 }, false);
-FPSMeter.run();
+window["FPSMeter"] && FPSMeter.run();
 
 function createElement() {
   let fps = document.createElement('div');
