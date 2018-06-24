@@ -1,5 +1,5 @@
 import * as _ from './util.js';
-import {transition, EasingFunctions} from './transition.js';
+import {transition} from './transition.js';
 import {newRectangularGrid} from './grid.js';
 import {newRectangularSvg} from './svg.js';
 import {newRectangularCanvas} from './canvas.js';
@@ -26,7 +26,7 @@ let transitions = {};
 let renderers =
 Object.entries(layouts).map(([id, layout]) => {
   let [el, render] = layout(h, w);
-  render = _.partial(render, color);
+  render = _.partial(render, d3.interpolateRainbow);
   document.getElementById(id).appendChild(
     rectangularLayoutWithTicks(
       rectangularLayoutWithTicks(el, h, w, {
@@ -52,8 +52,8 @@ Object.entries(layouts).map(([id, layout]) => {
     if (this.checked) {
       let from = transitions[id]
         ? transitions[id]()
-        : _.partial(compute, t + 360);
-      transitions[id] = transition(render, EasingFunctions.linear, duration, from, _.partial(compute, t));
+        : _.partial(compute, t + 1);
+      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(compute, t));
     } else if (transitions[id]) {
       transitions[id]();
     }
@@ -61,7 +61,7 @@ Object.entries(layouts).map(([id, layout]) => {
   return [id, render];
 });
 let update = function() {
-  let next = t - 360;
+  let next = t - 1;
   let running = false;
   renderers.map(([id, render]) => {
     if (toolbar[id].checked) {
@@ -69,7 +69,7 @@ let update = function() {
       let from = transitions[id]
         ? transitions[id]()
         : _.partial(compute, t);
-      transitions[id] = transition(render, EasingFunctions.linear, duration, from, _.partial(compute, next));
+      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(compute, next));
     }
   });
   if (running) t = next;
@@ -77,14 +77,10 @@ let update = function() {
 
 start();
 
-function color(v) {
-  return `hsl(${v}, 80%, 60%)`;
-}
-
 function value(f, t, x, y) {
   let dx = f(x,y) + t;
   if (x < w/2) {
-    return dx + 120;
+    return dx + 0.3;
   }
   return dx;
 }
