@@ -67,42 +67,22 @@ rect {
     --tick: var(--tick-width) solid black;
 }
 
-.x-axis {
-    border-top: var(--border);
-    margin-top: calc(-1 * var(--border-width));
-}
-.x-axis:nth-of-type(even) {
+.x-axis.tick-head {
     border-left: var(--tick);
     margin-left: calc(-0.5 * var(--tick-width));
 }
-.x-axis.first {
-    border-left: none;
-}
 
-.y-axis {
-    border-right: var(--border);
-    margin-right: calc(-1 * var(--border-width));
-}
-.y-axis:nth-of-type(even) {
+.y-axis.tick-head {
     border-top: var(--tick);
     margin-top: calc(-0.5 * var(--tick-width));
 }
 
 .x-label {
     grid-row: x-label;
-    grid-column-end: span 4;
+    grid-column-end: span 2;
     text-align: center;
     font-family: sans-serif;
     line-height: 1.2em;
-}
-.x-label.first {
-    grid-column-end: span 1;
-}
-.x-axis:nth-of-type(even) {
-    height: 4px;
-}
-.x-axis:nth-of-type(4n+2) {
-    height: 7px;
 }
 
 .y-label {

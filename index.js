@@ -18,13 +18,30 @@ let layouts =
 , "rectangular": newRectangularSvg
 }
 
+let columnLabels = d3.scaleQuantize().domain([1, 12]).range(["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]);
+let rowLabels = d3.scaleQuantize().domain([1, 7]).range(["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]);
+
 let toolbar = {};
 let transitions = {};
 let renderers =
 Object.entries(layouts).map(([id, layout]) => {
   let [el, render] = layout(h, w);
   render = _.partial(render, color);
-  document.getElementById(id).appendChild(rectangularLayoutWithTicks(el, h, w));
+  document.getElementById(id).appendChild(
+    rectangularLayoutWithTicks(
+      rectangularLayoutWithTicks(el, h, w, {
+        yTickCount: 50,
+        xTickCount: 100,
+        tickLength: '4px',
+      }), h, w, {
+        gutterLength: '5px',
+        yTickCount: 15,
+        xTickCount: 6,
+        yTickFormat: rowLabels,
+        xTickFormat: columnLabels
+      }
+    )
+  );
   if (el.classList) {
     el.classList.add('heatmap');
   } else {

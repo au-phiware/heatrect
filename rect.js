@@ -39,18 +39,48 @@ export function newRectangularLayout(createRoot, createCell, setColor, rows, col
   ];
 }
 
-var columnLabels = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-var rowLabels = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+export function tickOffset(step, count) {
+  let offset = count - Math.floor((count - (step + 1) % 2) / step) * step;
+  offset -= (step + 1) % 2;
+  offset /= 2;
+  return offset;
+}
 
-export function rectangularLayoutWithTicks(root, rows, cols) {
+function createTick(container, type, name) {
+  var el = document.createElement('i');
+  el.className = name + ' tick-tail';
+  el.style[type] = name;
+  container.appendChild(el);
+  el = document.createElement('i');
+  el.className = name + ' tick-head';
+  el.style[type] = name;
+  container.appendChild(el);
+}
+
+export function rectangularLayoutWithTicks(root, rows, cols, options) {
   let el;
-  let tickLength = '7px';
-  let gutterLength = '1px';
+  options = options || {};
+  let tickLength = options.tickLength || '3px';
+  let gutterLength = options.gutterLength || '1px';
+  let borderLength = options.borderLength || '1px';
+  let yTickCount = Math.min(rows, options.yTickCount || 10);
+  let xTickCount = Math.min(cols, options.xTickCount || 10);
+  let yTickFormat = options.yTickFormat;
+  let xTickFormat = options.xTickFormat;
+
+  let yTickStep = options.yTickStep || d3.tickStep(1, rows, yTickCount);
+  let xTickStep = options.xTickStep || d3.tickStep(1, cols, xTickCount);
+  let yTickHead = tickOffset(yTickStep, rows);
+  let xTickHead = tickOffset(xTickStep, cols);
+  yTickCount = Math.floor((rows - 2 * yTickHead) / yTickStep);
+  xTickCount = Math.floor((cols - 2 * xTickHead) / xTickStep);
+  let yTickTail = rows - yTickCount*yTickStep - yTickHead;
+  let xTickTail = cols - xTickCount*xTickStep - xTickHead;
 
   let container = document.createElement('div');
   container.style.display = 'grid';
-  container.style.gridTemplateColumns = `[origin-start y-label-start] 100px [y-label-end y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] repeat(${2*cols}, 1fr) [gutter-start] ${gutterLength} [gutter-end main-end]`;
-  container.style.gridTemplateRows = `[main-start gutter-start] ${gutterLength} [gutter-end] repeat(${2*rows}, 1fr) [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end x-label-start] 1.2em [x-label-end origin-end]`;
+  container.style.gridTemplateColumns = `[origin-start y-label-start] ${yTickFormat ? 'auto' : 0} [y-label-end y-axis-start] ${tickLength} [y-axis-end main-start] ${gutterLength} [origin-end] ${xTickHead > 0 ? xTickHead+'fr' : ''} repeat(${2*xTickCount}, ${xTickStep/2}fr) ${xTickTail > 0 ? xTickTail+'fr' : ''} [gutter-start] ${borderLength} [gutter-end main-end]`;
+  container.style.gridTemplateRows = `[main-start gutter-start] ${borderLength} [gutter-end] ${yTickTail > 0 ? yTickTail+'fr' : ''} repeat(${2*yTickCount}, ${yTickStep/2}fr) ${yTickHead > 0 ? yTickHead+'fr' : ''} [origin-start] ${gutterLength} [main-end x-axis-start] ${tickLength} [x-axis-end x-label-start] ${xTickFormat ? 'auto' : 0} [x-label-end origin-end]`;
 
   root.style.gridArea = 'main';
   container.appendChild(root);
@@ -67,51 +97,58 @@ export function rectangularLayoutWithTicks(root, rows, cols) {
   container.appendChild(el);
 
   let label;
-  for (var i = 0; i < rows; i++) {
-    label = document.createElement('span');
-    label.className = 'y-label';
-    el = document.createElement('i');
-    el.className = 'y-axis';
-    if (i == 0) {
-      label.classList.add('first');
-      el.classList.add('first');
-    }
-    label.innerText = rowLabels[i];
-    label.style.gridColumn = 'y-label';
-    el.style.gridColumn = 'y-axis';
-    container.appendChild(label);
-    container.appendChild(el);
-    el = document.createElement('i');
-    el.className = 'y-axis';
-    el.style.gridColumn = 'y-axis';
+  let y = Math.ceil(yTickHead + (yTickCount - 0.5) * yTickStep);
+  if (yTickTail > 0) {
+    el = document.createElement('div')
+    el.className = 'y-axis y-axis-tail';
+    el.style.gridColumn = 'y-label / y-axis';
     container.appendChild(el);
   }
-  label.classList.add('last');
-  el.classList.add('last');
+  for (var i = 0; i < yTickCount; i++) {
+    if (yTickFormat) {
+      label = document.createElement('span');
+      label.className = 'y-label';
+      label.style.gridColumn = 'y-label';
+      label.innerText = yTickFormat(y);
+      y -= yTickStep;
+      container.appendChild(label);
+    }
+    createTick(container, 'gridColumn', 'y-axis');
+  }
+  if (yTickHead > 0) {
+    el = document.createElement('div')
+    el.className = 'y-axis y-axis-head';
+    el.style.gridColumn = 'y-label / y-axis';
+    container.appendChild(el);
+  }
 
-  for (var i = 0; i < 2*cols + 1; i++) {
-    el = document.createElement('i');
-    el.className = 'x-axis';
-    if (i == 0) {
-      el.classList.add('first');
-    }
-    el.style.gridRow = 'x-axis';
+  if (xTickHead > 0) {
+    el = document.createElement('div')
+    el.className = 'x-axis x-axis-head';
+    el.style.gridRow = 'x-axis / x-label';
     container.appendChild(el);
   }
-  el.classList.add('last');
+  for (var i = 0; i < xTickCount; i++) {
+    createTick(container, 'gridRow', 'x-axis');
+  }
+  if (xTickTail > 0) {
+    el = document.createElement('div')
+    el.className = 'x-axis x-axis-tail';
+    el.style.gridRow = 'x-axis / x-label';
+    container.appendChild(el);
+  }
 
-  for (var i = 0; i < cols / 2; i++) {
-    el = document.createElement('span');
-    el.className = 'x-label';
-    if (i == 0) {
-      el.classList.add('first');
-    } else {
-      el.innerText = columnLabels[(i - 1) * 2 + 1]
+  if (xTickFormat) {
+    let x = Math.ceil(xTickHead + xTickStep / 2);
+    for (var i = 0; i < xTickCount; i++) {
+      el = document.createElement('span');
+      el.className = 'x-label';
+      el.style.gridRow = 'x-label';
+      el.innerText = xTickFormat(x);
+      x += xTickStep;
+      container.appendChild(el);
     }
-    el.style.gridRow = 'x-label';
-    container.appendChild(el);
   }
-  el.classList.add('last');
 
   return container;
 }
