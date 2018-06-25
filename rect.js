@@ -39,11 +39,15 @@ export function newRectangularLayout(createRoot, createCell, setColor, rows, col
   ];
 }
 
-export function tickOffset(step, count) {
-  let offset = count - Math.floor((count - (step + 1) % 2) / step) * step;
-  offset -= (step + 1) % 2;
-  offset /= 2;
-  return offset;
+export function justifyTicks(step, count) {
+  let offset = (step + 1) % 2;
+  let head = (count - offset) % step;
+  let tickCount = Math.floor((count - head) / step);
+  // When step is even, ensure head is odd
+  head += (head + offset) % 2;
+  head /= 2;
+  let tail = count - tickCount * step - head;
+  return [head, tickCount, tail];
 }
 
 function createTick(container, type, name) {
@@ -67,15 +71,12 @@ export function rectangularLayoutWithTicks(root, rows, cols, options) {
   let xTickCount = Math.min(cols, options.xTickCount || 10);
   let yTickFormat = options.yTickFormat;
   let xTickFormat = options.xTickFormat;
+  let yTickHead, yTickTail, xTickHead, xTickTail;
 
-  let yTickStep = options.yTickStep || d3.tickStep(1, rows, yTickCount);
-  let xTickStep = options.xTickStep || d3.tickStep(1, cols, xTickCount);
-  let yTickHead = tickOffset(yTickStep, rows);
-  let xTickHead = tickOffset(xTickStep, cols);
-  yTickCount = Math.floor((rows - 2 * yTickHead) / yTickStep);
-  xTickCount = Math.floor((cols - 2 * xTickHead) / xTickStep);
-  let yTickTail = rows - yTickCount*yTickStep - yTickHead;
-  let xTickTail = cols - xTickCount*xTickStep - xTickHead;
+  let yTickStep = Math.max(1, options.yTickStep || d3.tickStep(1, rows, yTickCount));
+  let xTickStep = Math.max(1, options.xTickStep || d3.tickStep(1, cols, xTickCount));
+  [yTickHead, yTickCount, yTickTail] = justifyTicks(yTickStep, rows);
+  [xTickHead, xTickCount, xTickTail] = justifyTicks(xTickStep, cols);
 
   let container = document.createElement('div');
   container.style.display = 'grid';
