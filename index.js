@@ -6,10 +6,10 @@ import {newRectangularCanvas} from './canvas.js';
 import {newRectangularTable} from './table.js';
 import {rectangularLayoutWithTicks} from './rect.js';
 
-let w = 90, h = 60;
+window.options = { w: 130, h: 100 };
+
 let t = 0;
 let duration = 4000;
-let compute = _.partial(value, hyperbola(w/3, h/2, w*2/3, h/2, 3/w));
 
 let layouts =
 { "rectangular-table": newRectangularTable
@@ -23,22 +23,25 @@ let rowLabels = d3.scaleQuantize().domain([1, 7]).range(["Sunday", "Monday", "Tu
 
 let toolbar = {};
 let transitions = {};
-let renderers =
+window.options.init = function() {
+window.options.compute = _.partial(value, hyperbola(window.options.w/3, window.options.h/2, window.options.w*2/3, window.options.h/2, 400/window.options.w));
+window.options.renderers =
 Object.entries(layouts).map(([id, layout]) => {
-  let [el, render] = layout(h, w);
+  let [el, render] = layout(window.options.h, window.options.w);
   render = _.partial(render, d3.interpolateRainbow);
+  document.getElementById(id).innerHTML = "";
   document.getElementById(id).appendChild(
     rectangularLayoutWithTicks(
-      rectangularLayoutWithTicks(el, h, w, {
+      rectangularLayoutWithTicks(el, window.options.h, window.options.w, {
         yTickCount: 30,
         xTickCount: 12,
         tickLength: '4px',
-      }), h, w, {
+      }), window.options.h, window.options.w, {
         gutterLength: '5px',
         yTickCount: 15,
         xTickCount: 6,
-        yTickFormat: t => rowLabels(t % rowLabels.domain()[1] + 1),
-        xTickFormat: t => columnLabels(t % columnLabels.domain()[1] + 1)
+        yTickFormat: t => rowLabels(((t - 1) % rowLabels.domain()[1]) + 1),
+        xTickFormat: t => columnLabels(((t - 1) % columnLabels.domain()[1]) + 1)
       }
     )
   );
@@ -52,34 +55,36 @@ Object.entries(layouts).map(([id, layout]) => {
     if (this.checked) {
       let from = transitions[id]
         ? transitions[id]()
-        : _.partial(compute, t + 1);
-      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(compute, t));
+        : _.partial(window.options.compute, t + 1);
+      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(window.options.compute, t));
     } else if (transitions[id]) {
       transitions[id]();
     }
   });
   return [id, render];
 });
-let update = function() {
+}
+window.options.update = function() {
   let next = t - 1;
   let running = false;
-  renderers.map(([id, render]) => {
+  window.options.renderers.map(([id, render]) => {
     if (toolbar[id].checked) {
       running = true;
       let from = transitions[id]
         ? transitions[id]()
-        : _.partial(compute, t);
-      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(compute, next));
+        : _.partial(window.options.compute, t);
+      transitions[id] = transition(render, d3.easeLinear, duration, from, _.partial(window.options.compute, next));
     }
   });
   if (running) t = next;
 }
 
+window.options.init();
 start();
 
 function value(f, t, x, y) {
   let dx = f(x,y) + t;
-  if (x < w/2) {
+  if (x < window.options.w/2) {
     return dx + 0.3;
   }
   return dx;
@@ -98,6 +103,6 @@ function stop() {
   clearTimeout(loop);
 }
 function start() {
-  requestAnimationFrame(update);
+  requestAnimationFrame(window.options.update);
   loop = setTimeout(start, duration)
 }
